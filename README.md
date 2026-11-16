@@ -13,9 +13,9 @@ flowchart TD
     subgraph APP[" "]
         C["Controller"] --> S["Search Service"]
          ~~~ E
-        S -->|"cache miss"| SC["Scraper"]
+        S -->|" cache miss "| SC["Scraper"]
         SC --> P["Clean, Dedupe, Rank"]
-        S -.->|"enqueue"| M["Background Miner"]
+        S -.->|" enqueue "| M["Background Miner"]
     end
  
     UI --> C
