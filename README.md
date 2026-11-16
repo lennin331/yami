@@ -1,5 +1,5 @@
 
-## Yet Another Miner  on the Internet
+# Yet Another Miner  on the Internet
 
  
 Search aggregator with caching and mining utilities, suggestively with faster and relevant data frames.
