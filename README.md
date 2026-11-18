@@ -36,3 +36,6 @@ flowchart TD
 **Stack:** Java, Spring Boot, Maven, Hibernate, PostgreSQL, Jsoup, Playwright
 
 > To Add:  Ranking mechanism, Anti Bot routes, Testing tools.
+
+### Docs
+- `mvn compile exec:java`
