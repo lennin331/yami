@@ -28,7 +28,7 @@ flowchart TD
     style DB fill:#e2e8f0, stroke:#475569, color:#0f172a
 ```
  
-- New query goes to the scraper, which fetches from [mentioned](https://example.com) search engines.
+- New query goes to the scraper, which fetches from [mentioned](src/main/resources/search_domain.txt) search engines.
 - Results are ranked and stored in postgreSQL.
 - The background miner keeps drilling down the stored data, branching until met the cache quote.
 - Follow-up queries are answered from the database first given the new scraped clump gets a lower ranking.
