@@ -1,2 +1,5 @@
+config.properties
 .project
 .classpath
+.env
+target/
