@@ -1,5 +1,3 @@
-package local;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -13,8 +11,13 @@ import java.util.List;
 
 public class App {
 
-    record SearchResult(String title, String url, String snippet) {}
-
+   // record SearchResult(String title, String url, String snippet) {}
+ 
+    private static final Scraper SCRAPER = new Scraper();
+    private static List<SearchResult> performSearch(String query) {
+       if (query.isBlank()) return List.of();
+       return SCRAPER.search(query);
+}; 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
@@ -35,7 +38,8 @@ public class App {
         // Handle search queries
         server.createContext("/search", App::handleSearch);
 
-        server.setExecutor(null);
+        //server.setExecutor(null); //replaced
+        server.setExecutor(Executors.newFixedThreadPool(8));
         server.start();
         System.out.println("Search UI running at http://localhost:8080");
     }
@@ -74,7 +78,7 @@ public class App {
                 html.append("""
                     <div class="result-item">
                         <a class="result-title" href="%s">%s</a>
-                        <div class="result-url">%s</div>
+                        <div class="result-url">%s <span class="result-engine">[%s]</span></div>
                         <p class="result-snippet">%s</p>
                     </div>
                     """.formatted(
