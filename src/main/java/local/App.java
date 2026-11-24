@@ -1,3 +1,5 @@
+package local;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -8,16 +10,12 @@ import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class App {
 
-   // record SearchResult(String title, String url, String snippet) {}
- 
     private static final Scraper SCRAPER = new Scraper();
-    private static List<SearchResult> performSearch(String query) {
-       if (query.isBlank()) return List.of();
-       return SCRAPER.search(query);
-}; 
+
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
@@ -31,14 +29,14 @@ public class App {
         });
 
         // Serve CSS
-        server.createContext("/style.css", exchange -> 
+        server.createContext("/style.css", exchange ->
             serveResource(exchange, "/public/style.css", "text/css")
         );
 
         // Handle search queries
         server.createContext("/search", App::handleSearch);
 
-        //server.setExecutor(null); //replaced
+        // Thread pool so one slow scrape doesn't block other requests
         server.setExecutor(Executors.newFixedThreadPool(8));
         server.start();
         System.out.println("Search UI running at http://localhost:8080");
@@ -51,7 +49,6 @@ public class App {
             query = URLDecoder.decode(rawQuery.substring(2), StandardCharsets.UTF_8);
         }
 
-        // Replace this mock list with your scraper / database / index lookup
         List<SearchResult> results = performSearch(query);
 
         StringBuilder html = new StringBuilder();
@@ -85,6 +82,7 @@ public class App {
                         escapeHtml(r.url()),
                         escapeHtml(r.title()),
                         escapeHtml(r.url()),
+                        escapeHtml(r.engine()),
                         escapeHtml(r.snippet())
                     ));
             }
@@ -101,19 +99,8 @@ public class App {
     }
 
     private static List<SearchResult> performSearch(String query) {
-        // Stub implementation — wire your backend search/mining logic here
-        return List.of(
-            new SearchResult(
-                "Result for: " + query,
-                "https://example.org/docs",
-                "Deterministic match retrieved from local index or upstream aggregator."
-            ),
-            new SearchResult(
-                "ArchWiki - Suckless & Minimalist Tools",
-                "https://wiki.archlinux.org",
-                "Documentation for lightweight, terminal-first software and window managers."
-            )
-        );
+        if (query.isBlank()) return List.of();
+        return SCRAPER.search(query);
     }
 
     private static void serveResource(HttpExchange exchange, String path, String contentType) throws IOException {
