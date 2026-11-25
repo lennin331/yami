@@ -58,6 +58,17 @@ public class Scraper {
                 perEngine.add(List.of());
             }
         }
+        for (int i = 0; i < futures.size(); i++) {
+            String name = engines.get(i).name();
+            try {
+                List<SearchResult> got = futures.get(i).get(FETCH_TIMEOUT_MS + 2000, TimeUnit.MILLISECONDS);
+                System.out.println("[scraper] " + name + " -> " + got.size() + " results");
+                perEngine.add(got);
+            } catch (Exception ex) {
+                System.err.println("[scraper] " + name + " failed: " + ex.getMessage());
+                perEngine.add(List.of());
+            }
+        }
 
         // Interleave engines (1st of each, then 2nd of each...) and dedupe by URL
         Map<String, SearchResult> merged = new LinkedHashMap<>();

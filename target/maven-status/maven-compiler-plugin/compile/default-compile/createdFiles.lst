@@ -1,0 +1,6 @@
+local/SearchResult.class
+local/Scraper.class
+local/App.class
+local/Config.class
+local/Scraper$Engine.class
+local/Scraper$Selectors.class

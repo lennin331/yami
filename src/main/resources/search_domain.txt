@@ -1,4 +1,4 @@
 duckduckgo|https://html.duckduckgo.com/html/?q={q}
 google|https://www.google.com/search?q={q}
 yandex|https://yandex.com/search/?text={q}
-serpapi|https://serpapi.com/search.json?engine=google&q={q}&api_key={API_KEY}
+serpapi|https://serpapi.com/search.json?engine=google&q={q}&api_key={key}
